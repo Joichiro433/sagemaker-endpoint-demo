@@ -1,0 +1,20 @@
+FROM python:3.10-slim
+
+WORKDIR /usr/src/app
+
+RUN apt-get update -y \
+    && apt-get install -y libgomp1 \
+    && apt-get install -y gcc \
+    && apt-get install -y openjdk-17-jdk-headless \
+    && apt-get -y clean all
+    
+RUN pip install --no-cache-dir \
+    numpy \ 
+    pandas \
+    multi-model-server \ 
+    sagemaker-inference \
+    lightgbm \
+    structlog
+
+COPY serve.py ./
+ENTRYPOINT ["python", "/usr/src/app/serve.py"]
